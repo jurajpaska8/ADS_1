@@ -11,12 +11,17 @@ namespace ADS_1.code
             Path = path;
         }
 
-        public string[] readLines()
+        public string[] ReadLines()
         {
             string[] lines = System.IO.File.ReadAllLines(Path);
             return lines;
         }
-        public Dictionary<string, int> transformLinesIntoDic(string[] lines)
+        /// <summary>
+        /// Lines have string form: "int: frequency string: word". Method splits lines into dictionary where word is key and the frequency is value.
+        /// </summary>
+        /// <param name="lines">array of lines cotainig word with its frequency</param>
+        /// <returns>new dictionary with word:frequency mapping</returns>
+        public Dictionary<string, int> TransformLinesIntoDic(string[] lines)
         {
             Dictionary<string, int> dic = new Dictionary<string, int>();
 
@@ -34,7 +39,7 @@ namespace ADS_1.code
         /// <summary>Returns Dictionary of words, which has all frequencies higher 
         ///     than value freq. Allert: Alters original dictionary.
         /// </summary>
-        public Dictionary<string, int> getWordsWithFrequentionHigherThanFreq(Dictionary<string, int> dic, int freq)
+        public Dictionary<string, int> GetWordsWithFrequentionHigherThanFreq(Dictionary<string, int> dic, int freq)
         {
             foreach (KeyValuePair<string, int> entry in dic)
             { 
