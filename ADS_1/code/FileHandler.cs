@@ -35,22 +35,5 @@ namespace ADS_1.code
             }
             return dic;
         }
-
-        /// <summary>Returns Dictionary of words, which has all frequencies higher 
-        ///     than value freq. Allert: Alters original dictionary.
-        /// </summary>
-        public Dictionary<string, int> GetWordsWithFrequentionHigherThanFreq(Dictionary<string, int> dic, int freq)
-        {
-            foreach (KeyValuePair<string, int> entry in dic)
-            { 
-                if(entry.Value <= freq)
-                {
-                    dic.Remove(entry.Key);
-                }
-            }
-            return dic;
-        }
-
-
     }
 }
