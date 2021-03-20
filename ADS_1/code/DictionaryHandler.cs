@@ -102,12 +102,69 @@ namespace ADS_1.code
             // find indexes of words
             int idxBottomWord = dic.Keys.ToList().IndexOf(wordBottom);
             int idxUpWord = dic.Keys.ToList().IndexOf(wordUp);
+
             if(idxBottomWord >= 0 && idxUpWord >= 0)
             {
                 return GetRelativeFrequencyOfGap(idxBottomWord, idxUpWord, dic, allFreq);
             }
 
             return 0;
+        }
+        /// <summary>
+        /// Finds lexicographically nearest word from bottom. 
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="dic"></param>
+        /// <returns></returns>
+        public static string FindNearestUpWord(string word, SortedDictionary<string, int> dic)
+        {
+            foreach(var entry in dic)
+            { 
+                if(entry.Key.CompareTo(word) > 0)
+                {
+                    return entry.Key;
+                }
+            }
+            return "";
+        }
+
+        public static string FindNearestBottom(string word, SortedDictionary<string, int> dic)
+        {
+            foreach (var entry in dic.Reverse())
+            {
+                if (entry.Key.CompareTo(word) < 0)
+                {
+                    return entry.Key;
+                }
+            }
+            return "";
+        }
+
+        public static double GetRelativeFrequencyOfGapFromAll(string word, SortedDictionary<string, int> sortedDic, SortedDictionary<string, int> allWordsDic, int allFreq)
+        {
+            if(IsWordInDictionary(word, sortedDic))
+            {
+                Console.WriteLine(word + " is not in any gap. It is contained in over 50k dictionary");
+                return 0;
+            }
+            // find boundaries
+            string upWord = FindNearestUpWord(word, sortedDic);
+            string bottomWord = FindNearestBottom(word, sortedDic);
+
+            // default indices
+            int idxBottomWord = -1;
+            int idxUpWord = allWordsDic.Count;
+
+
+            if (!upWord.Equals(""))
+            { 
+                idxUpWord = allWordsDic.Keys.ToList().IndexOf(upWord);
+            }
+            if (!bottomWord.Equals(""))
+            {
+                idxBottomWord = allWordsDic.Keys.ToList().IndexOf(bottomWord);
+            }
+            return GetRelativeFrequencyOfGap(idxBottomWord, idxUpWord, allWordsDic, allFreq);
         }
 
         public static bool IsWordInDictionary(string word, IDictionary<string, int> dic)
