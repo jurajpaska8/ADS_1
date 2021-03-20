@@ -50,6 +50,31 @@ namespace ADS_1.code
             return true;
         }
 
+        public Node Find(string word)
+        {
+            int level = 1;
+            return this.Find(word, this.Root, level);
+        }
+
+        public Node Find(string word, Node parent, int level)
+        {
+            if (parent != null)
+            {
+                if (word.Equals(parent.Word)) 
+                {
+                    Console.WriteLine(level + ". level, word = " + word);
+                    return parent;
+                }
+                level += 1;
+                if (word.CompareTo(parent.Word) < 0)
+                    return Find(word, parent.LeftNode, level);
+                else
+                    return Find(word, parent.RightNode, level);
+            }
+
+            return null;
+        }
+
         public void BuildFromOrder(string[] keys, int[] keysOrder)
         {
             if (keys.Length != keysOrder.Length)

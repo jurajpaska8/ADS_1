@@ -37,10 +37,13 @@ namespace ADS_1
             // build tree
             BinaryTreeFinal binaryTreeFinal = new BinaryTreeFinal();
             binaryTreeFinal.BuildFromOrder(sortedDicOver50k.Keys.ToArray(), order.ToArray());
+
+            binaryTreeFinal.Find("the");
+            binaryTreeFinal.Find("a");
+            binaryTreeFinal.Find("of");
+            binaryTreeFinal.Find("and");
             Console.WriteLine("End");
 
-
-            //print stats
         }
     }
 }
