@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ADS_1.code;
 
 namespace ADS_1
@@ -21,30 +22,25 @@ namespace ADS_1
             //get shrunked Dictionary as sorted one
             var sortedDicOver50k = new SortedDictionary<string, int>(dicOver50k);
 
-            // return sum of all frequencies in over 50k dictionary
-            var freqSumSortedOver50k = DictionaryHandler.SumOfValues(sortedDicOver50k);
-            var freqSumOver50k = DictionaryHandler.SumOfValues(dicOver50k);
+          
 
-            // return sum of all frequencies in over 50k dictionary
-            var freqSumSortedOriginal = DictionaryHandler.SumOfValues(sortedDic);
-            var freqSumOriginal = DictionaryHandler.SumOfValues(dic);
+            //OptimalBinaryTree binaryTree = new OptimalBinaryTree(sortedDicOver50k, sortedDic);
+            OptimalBinaryTree binaryTree = new OptimalBinaryTree("p_values", "q_values", sortedDicOver50k, true) ;
+            double cost = 0;
+            int[,] rootsMattrix = binaryTree.ComputeOptimalTreeCostSuccessful(out cost);
+            int rootMattrixIndex = sortedDicOver50k.Count - 1;
 
 
-            // freq of the
-            double freq_the = DictionaryHandler.GetRelativeFrequencyOfWord("the", sortedDicOver50k, freqSumSortedOver50k);
-            double freq_108 = DictionaryHandler.GetRelativeFrequencyOfWord(108, sortedDicOver50k, freqSumSortedOver50k);
+            List<int> order = binaryTree.GetOrderOfAddingKeys(rootsMattrix, rootMattrixIndex);
 
-            // test gap frequencies
-            double q_all_sorted = DictionaryHandler.GetRelativeFrequencyOfGap(-1, sortedDicOver50k.Count, sortedDicOver50k, freqSumSortedOver50k);
 
-            double q_all_sorted_1_n = DictionaryHandler.GetRelativeFrequencyOfGap(0, sortedDicOver50k.Count - 1, sortedDicOver50k, freqSumSortedOver50k);
-            double q_all_sorted_words = DictionaryHandler.GetRelativeFrequencyOfGap("a", "your", sortedDicOver50k, freqSumSortedOver50k);
+            // build tree
+            BinaryTreeFinal binaryTreeFinal = new BinaryTreeFinal();
+            binaryTreeFinal.BuildFromOrder(sortedDicOver50k.Keys.ToArray(), order.ToArray());
+            Console.WriteLine("End");
+
 
             //print stats
-            Console.WriteLine(freq_the);
-            Console.WriteLine("Lines in file: " + lines.Length);
-            Console.WriteLine("KeyPairs in original dic: " + dic.Count);
-            Console.WriteLine("KeyPairs in shrunked dic: " + dicOver50k.Count);
         }
     }
 }
