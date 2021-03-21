@@ -75,6 +75,31 @@ namespace ADS_1.code
             return null;
         }
 
+        public int PocetPorovnani(string word)
+        {
+            int level = 1;
+            return this.PocetPorovnani(word, this.Root, level);
+        }
+
+        public int PocetPorovnani(string word, Node parent, int level)
+        {
+            if (parent != null)
+            {
+                if (word.Equals(parent.Word))
+                {
+                    Console.WriteLine(level + ". level, word = " + word);
+                    return level;
+                }
+                level += 1;
+                if (word.CompareTo(parent.Word) < 0)
+                    return PocetPorovnani(word, parent.LeftNode, level);
+                else
+                    return PocetPorovnani(word, parent.RightNode, level);
+            }
+
+            return level;
+        }
+
         public void BuildFromOrder(string[] keys, int[] keysOrder)
         {
             if (keys.Length != keysOrder.Length)
@@ -89,9 +114,11 @@ namespace ADS_1.code
         }
 
 
-
-
-        /* Print nodes at a given level */
+        /// <summary>
+        ///  Print nodes at a given level
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="level"></param>
         public void PrintGivenLevel(Node root, int level)
         {
             if (root == null)
