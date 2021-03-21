@@ -28,10 +28,11 @@ namespace ADS_1
             OptimalBinaryTreeContext binaryTreeContext = new OptimalBinaryTreeContext("p_values", "q_values", false);
             double cost = 0;
             int[,] rootsMattrix = binaryTreeContext.ComputeOptimalTreeCostSuccessful(out cost);
-            int rootMattrixIndex = sortedDicOver50k.Count - 1;
+            int rootMattrixIndex = 151;
+            int startIndex = 1;
 
 
-            List<int> order = binaryTreeContext.GetOrderOfAddingKeys(rootsMattrix, 151, 1);
+            List<int> order = binaryTreeContext.GetOrderOfAddingKeys(rootsMattrix, rootMattrixIndex, startIndex);
 
 
             // build tree
@@ -43,17 +44,26 @@ namespace ADS_1
             binaryTree.Find("of");
             binaryTree.Find("and");
 
-            for(int i = 1; i <= 10; i++)
+            binaryTree.Find("another");
+            binaryTree.Find("even");
+            binaryTree.Find("must");
+            binaryTree.Find("door");
+            binaryTree.Find("after");
+            binaryTree.Find("year");
+
+
+            for (int i = 1; i <= 10; i++)
             {
                 Console.WriteLine("******** " + i + ". Level *********");
                 binaryTree.PrintGivenLevel(binaryTree.Root, i);
             }
 
-            int p1 = binaryTree.PocetPorovnani("thea");
-            int p2 = binaryTree.PocetPorovnani("ab");
-            int p3 = binaryTree.PocetPorovnani("ofa");
-            int p4 = binaryTree.PocetPorovnani("anda");
-            int p5 = binaryTree.PocetPorovnani("aa");
+            int p1 = binaryTree.pocet_porovnani("thea");
+            int p2 = binaryTree.pocet_porovnani("ab");
+            int p3 = binaryTree.pocet_porovnani("ofa");
+            int p4 = binaryTree.pocet_porovnani("anda");
+            int p5 = binaryTree.pocet_porovnani("aa");
+            int p6 = binaryTree.pocet_porovnani("musta");
             Console.WriteLine("End");
         }
     }

@@ -84,13 +84,13 @@ namespace ADS_1.code
         /// </summary>
         /// <param name="word"></param>
         /// <returns></returns>
-        public int PocetPorovnani(string word)
+        public int pocet_porovnani(string word)
         {
             int level = 1;
             return this.PocetPorovnani(word, this.Root, level);
         }
 
-        public int PocetPorovnani(string word, Node parent, int level)
+        private int PocetPorovnani(string word, Node parent, int level)
         {
             if (parent != null)
             {
@@ -106,7 +106,7 @@ namespace ADS_1.code
                     return PocetPorovnani(word, parent.RightNode, level);
             }
 
-            return level;
+            return level - 1;
         }
 
         /// <summary>
