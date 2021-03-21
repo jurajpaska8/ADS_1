@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Used sources:
+// Binary Tree Implementation:
+//http://csharpexamples.com/c-binary-search-tree-implementation/
+
+using System;
 
 namespace ADS_1.code
 {
