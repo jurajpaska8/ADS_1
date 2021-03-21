@@ -11,20 +11,22 @@ namespace ADS_1.code
         public int order = -1;
     };
 
-    class BinaryTreeFinal
+    class BinaryTree
     {
         public Node Root { get; set; }
 
-        public bool Add(string value, int order = -1)
+        public bool Add(string value, int order = -1, int freq = -1)
         {
             Node before = null, after = this.Root;
 
             while (after != null)
             {
                 before = after;
-                if (string.Compare(value, after.Word) < 0) //Is new node in left tree? 
+                // Is new node in left tree? 
+                if (string.Compare(value, after.Word) < 0) 
                     after = after.LeftNode;
-                else if (string.Compare(value, after.Word) > 0) //Is new node in right tree?
+                // Is new node in right tree?
+                else if (string.Compare(value, after.Word) > 0) 
                     after = after.RightNode;
                 else
                 {
@@ -36,8 +38,10 @@ namespace ADS_1.code
             Node newNode = new Node();
             newNode.Word = value;
             newNode.order = order;
+            newNode.freq = freq;
 
-            if (this.Root == null)//Tree ise empty
+            // If Tree is empty
+            if (this.Root == null)
                 this.Root = newNode;
             else
             {
@@ -75,6 +79,11 @@ namespace ADS_1.code
             return null;
         }
 
+        /// <summary>
+        /// Returns number of comparison 
+        /// </summary>
+        /// <param name="word"></param>
+        /// <returns></returns>
         public int PocetPorovnani(string word)
         {
             int level = 1;
@@ -100,6 +109,12 @@ namespace ADS_1.code
             return level;
         }
 
+        /// <summary>
+        /// Function will add keys according to order given in keysOrder array. 
+        /// So it means that keysOrder should be permutation
+        /// </summary>
+        /// <param name="keys"></param>
+        /// <param name="keysOrder"></param>
         public void BuildFromOrder(string[] keys, int[] keysOrder)
         {
             if (keys.Length != keysOrder.Length)

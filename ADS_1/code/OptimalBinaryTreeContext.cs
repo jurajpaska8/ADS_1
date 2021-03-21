@@ -6,29 +6,40 @@ using System.Linq;
 
 namespace ADS_1.code
 {
-    class OptimalBinaryTree
+    class OptimalBinaryTreeContext
     {
-        string[] keys;
+        // probability of key finding - p[0] is redudant -> due to index
+        // [1..n]
         double[] p;
+        // probability of dummy key finding 
+        // [0..n]
         double[] q;
+        // max index in p or q
+        int n = 0;
 
-        // successfull searching
-        double[,] successfullSearchingTable;
-
-        public OptimalBinaryTree(SortedDictionary<string, int> keysDict, SortedDictionary<string, int> allWords)
+        /// <summary>
+        /// Build probabilities p, q and index n according to sorted dictionaries. Values p[] are from keys, q[] are from gaps between keys.
+        /// If write binary is set to true, than we can store this arrays to binary files with pName for p and qName for q.
+        /// </summary>
+        /// <param name="keysDict"></param>
+        /// <param name="allWords"></param>
+        /// <param name="writeBinary"></param>
+        /// <param name="pName"></param>
+        /// <param name="qName"></param>
+        public OptimalBinaryTreeContext(SortedDictionary<string, int> keysDict, SortedDictionary<string, int> allWords,
+                                        bool writeBinary = false, string pName = "p_values", string qName = "q_values")
         {
             // compute sum of frequencies
             int sum = DictionaryHandler.SumOfValues(allWords);
 
-            // get keys
-            keys = keysDict.Keys.ToArray();
-
             // make table
             p = new double[keysDict.Count + 1];
+
+            // make table
             q = new double[keysDict.Count + 1];
 
-            // make table of sums - successful searching
-            successfullSearchingTable = new double[keysDict.Count + 1, keysDict.Count + 1];
+            // set max index
+            n = p.Length - 1;
 
             // first item in p will be empty
             p[0] = double.NegativeInfinity;
@@ -38,39 +49,37 @@ namespace ADS_1.code
             // compute all freq
             int ctr = 1;
 
-            foreach (string w in keys)
+            foreach (string w in keysDict.Keys.ToArray())
             {
                 p[ctr] = DictionaryHandler.GetRelativeFrequencyOfWord(w, allWords, sum);
                 q[ctr] = DictionaryHandler.GetRelativeFrequencyOfGapFromAll(w + "a", keysDict, allWords, sum);
                 ctr++;
             }
 
-            double testSum = q[0];
-            for (int i = 1; i < q.Length; i++)
+            if (writeBinary)
             {
-                testSum += q[i];
-                testSum += p[i];
+                // write p as binary
+                byte[] pBytes = new byte[p.Length * sizeof(double)];
+                Buffer.BlockCopy(p, 0, pBytes, 0, pBytes.Length);
+                System.IO.File.WriteAllBytes(pName, pBytes);
+
+                // write q as binary
+                byte[] qBytes = new byte[q.Length * sizeof(double)];
+                Buffer.BlockCopy(q, 0, qBytes, 0, qBytes.Length);
+                System.IO.File.WriteAllBytes(qName, qBytes);
             }
-
-            byte[] p_bytes = new byte[p.Length * sizeof(double)];
-            Buffer.BlockCopy(p, 0, p_bytes, 0, p_bytes.Length);
-            System.IO.File.WriteAllBytes("p_values", p_bytes);
-
-            byte[] q_bytes = new byte[q.Length * sizeof(double)];
-            Buffer.BlockCopy(q, 0, q_bytes, 0, q_bytes.Length);
-            System.IO.File.WriteAllBytes("q_values", q_bytes);
-
         }
 
-        public OptimalBinaryTree(double[] p, double[] q, int n)
+        public OptimalBinaryTreeContext(double[] p, double[] q, int n)
         {
             this.p = p;
             this.q = q;
-            successfullSearchingTable = new double[n, n];
+            this.n = n;
         }
 
-        public OptimalBinaryTree(string pPath, string qPath, SortedDictionary<string, int> keysDict, bool onlyP)
+        public OptimalBinaryTreeContext(string pPath, string qPath, bool onlyP)
         {
+            // if we want to build tree without dummy keys - then remove first value - it is redudant
             if (onlyP)
             {
                 // without first dummy freq
@@ -78,29 +87,23 @@ namespace ADS_1.code
                 p = new double[pbytes.Length / 8 - 1];
                 for (int i = 0; i < p.Length; i++)
                     p[i] = BitConverter.ToDouble(pbytes, (i + 1) * 8);
-                successfullSearchingTable = new double[p.Length + 1, p.Length + 1];
-                keys = keysDict.Keys.ToArray();
                 return;
             }
-            byte[] p_read_bytes = System.IO.File.ReadAllBytes(pPath);
-            p = new double[p_read_bytes.Length / 8];
+
+            // read p from binary file
+            byte[] pReadBytes = System.IO.File.ReadAllBytes(pPath);
+            p = new double[pReadBytes.Length / 8];
             for (int i = 0; i < p.Length; i++)
-                p[i] = BitConverter.ToDouble(p_read_bytes, i * 8);
+                p[i] = BitConverter.ToDouble(pReadBytes, i * 8);
 
-            byte[] q_read_bytes = System.IO.File.ReadAllBytes(qPath);
-            q = new double[q_read_bytes.Length / 8];
+            // read q from binary file
+            byte[] qReadBytes = System.IO.File.ReadAllBytes(qPath);
+            q = new double[qReadBytes.Length / 8];
             for (int i = 0; i < q.Length; i++)
-                q[i] = BitConverter.ToDouble(q_read_bytes, i * 8);
+                q[i] = BitConverter.ToDouble(qReadBytes, i * 8);
 
-            double testSum = q[0];
-            for (int i = 1; i < q.Length; i++)
-            {
-                testSum += q[i];
-                testSum += p[i];
-            }
-
-            successfullSearchingTable = new double[p.Length, p.Length];
-            keys = keysDict.Keys.ToArray();
+            // set max index
+            n = p.Length - 1;
         }
 
         public int[,] ComputeOptimalTreeCostSuccessful(out double cost)
@@ -153,21 +156,6 @@ namespace ADS_1.code
             }
             cost = e[1, n - 1];
             return roots;
-        }
-
-        // A utility function to get sum of array elements  
-        // freq[i] to freq[j] 
-        static double sum(double[] p, double[] q, int i, int j)
-        {
-            double s = 0;
-            for (int k = i; k <= j; k++)
-            {
-                if (k >= p.Length)
-                    continue;
-                s += p[k];
-                s += q[k - 1];
-            }
-            return s;
         }
 
         /// <summary>

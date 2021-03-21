@@ -24,50 +24,35 @@ namespace ADS_1
 
 
 
-            //OptimalBinaryTree binaryTree = new OptimalBinaryTree(sortedDicOver50k, sortedDic);
-            OptimalBinaryTree binaryTree = new OptimalBinaryTree("p_values", "q_values", sortedDicOver50k, false);
+            //OptimalBinaryTreeContext binaryTreeContext = new OptimalBinaryTreeContext(sortedDicOver50k, sortedDic, true, "p_values", "q_values");
+            OptimalBinaryTreeContext binaryTreeContext = new OptimalBinaryTreeContext("p_values", "q_values", false);
             double cost = 0;
-            int[,] rootsMattrix = binaryTree.ComputeOptimalTreeCostSuccessful(out cost);
+            int[,] rootsMattrix = binaryTreeContext.ComputeOptimalTreeCostSuccessful(out cost);
             int rootMattrixIndex = sortedDicOver50k.Count - 1;
 
 
-            List<int> order = binaryTree.GetOrderOfAddingKeys(rootsMattrix, 151, 1);
+            List<int> order = binaryTreeContext.GetOrderOfAddingKeys(rootsMattrix, 151, 1);
 
 
             // build tree
-            BinaryTreeFinal binaryTreeFinal = new BinaryTreeFinal();
-            binaryTreeFinal.BuildFromOrder(sortedDicOver50k.Keys.ToArray(), order.ToArray());
+            BinaryTree binaryTree = new BinaryTree();
+            binaryTree.BuildFromOrder(sortedDicOver50k.Keys.ToArray(), order.ToArray());
 
-            binaryTreeFinal.Find("the");
-            binaryTreeFinal.Find("a");
-            binaryTreeFinal.Find("of");
-            binaryTreeFinal.Find("and");
+            binaryTree.Find("the");
+            binaryTree.Find("a");
+            binaryTree.Find("of");
+            binaryTree.Find("and");
 
-            binaryTreeFinal.PrintGivenLevel(binaryTreeFinal.Root, 1);
-            binaryTreeFinal.PrintGivenLevel(binaryTreeFinal.Root, 2);
-            binaryTreeFinal.PrintGivenLevel(binaryTreeFinal.Root, 3);
+            binaryTree.PrintGivenLevel(binaryTree.Root, 1);
+            binaryTree.PrintGivenLevel(binaryTree.Root, 2);
+            binaryTree.PrintGivenLevel(binaryTree.Root, 3);
 
-            int p1 = binaryTreeFinal.PocetPorovnani("thea");
-            int p2 = binaryTreeFinal.PocetPorovnani("ab");
-            int p3 = binaryTreeFinal.PocetPorovnani("ofa");
-            int p4 = binaryTreeFinal.PocetPorovnani("anda");
-            int p5 = binaryTreeFinal.PocetPorovnani("aa");
+            int p1 = binaryTree.PocetPorovnani("thea");
+            int p2 = binaryTree.PocetPorovnani("ab");
+            int p3 = binaryTree.PocetPorovnani("ofa");
+            int p4 = binaryTree.PocetPorovnani("anda");
+            int p5 = binaryTree.PocetPorovnani("aa");
             Console.WriteLine("End");
-
-
-
-            //int n = 7;
-            //double[] p = new double[] { -10, 0.15, 0.10, 0.05, 0.10, 0.2};
-            //double[] q = new double[] { 0.05, 0.10, 0.05, 0.05, 0.05, 0.1 };
-            //OptimalBinaryTree obt = new OptimalBinaryTree(p, q, n);
-            //double c = 0;
-            //int[,] roots = obt.ComputeOptimalTreeCostSuccessful(out c);
-            //List<int> orderMatrix = obt.GetOrderOfAddingKeys(roots, 5, 1);
-
-            //BinaryTreeFinal binaryTreeFinal = new BinaryTreeFinal();
-            //binaryTreeFinal.BuildFromOrder(new string[] { "1", "2", "3", "4", "5"}, orderMatrix.ToArray());
-
-            //Console.WriteLine("End");
         }
     }
 }
