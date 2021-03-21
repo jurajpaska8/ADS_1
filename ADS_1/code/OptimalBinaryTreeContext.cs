@@ -160,7 +160,7 @@ namespace ADS_1.code
                     }
                 }
             }
-            cost = e[1, n - 1];
+            cost = e[1, n];
             return roots;
         }
 
