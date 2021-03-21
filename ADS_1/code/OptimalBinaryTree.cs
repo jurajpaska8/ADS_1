@@ -106,13 +106,15 @@ namespace ADS_1.code
         public int[,] ComputeOptimalTreeCostSuccessful(out double cost)
         {
             // first element of p is redudant ... so it contains n - 1 keys and redudant member at 0 index
-            int n = p.Length;
-            int[,] roots = new int[n + 1, n + 1];
-            double[,] e= new double[n + 1, n + 1];
-            double[,] w = new double[n + 1, n + 1];
+            int len = p.Length;
+            // last index
+            int n = len - 1;
+            int[,] roots = new int[len + 1, len + 1];
+            double[,] e= new double[len + 1, len + 1];
+            double[,] w = new double[len + 1, len + 1];
 
             // For a single key, cost is equal to frequency of the key 
-            for (int i = 1; i < n + 1; i++)
+            for (int i = 1; i <= n + 1; i++)
             {
                 roots[i, i - 1] = i;
                 e[i, i - 1] = q[i - 1];
@@ -122,11 +124,11 @@ namespace ADS_1.code
 
             // Now we need to consider chains of length 2, 3, ... . 
             // L is chain length. 
-            for (int L = 1; L < n; L++)
+            for (int L = 1; L <= n; L++)
             {
 
                 // i is row number in cost[][] 
-                for (int i = 1; i < n - L + 1; i++)
+                for (int i = 1; i <= n - L + 1; i++)
                 {
 
                     // Get column number j from row number i and  

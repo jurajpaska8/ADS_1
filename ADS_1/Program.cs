@@ -53,6 +53,11 @@ namespace ADS_1
             OptimalBinaryTree obt = new OptimalBinaryTree(p, q, n);
             double c = 0;
             int[,] roots = obt.ComputeOptimalTreeCostSuccessful(out c);
+            List<int> orderMatrix = obt.GetOrderOfAddingKeys(roots, 5, 1);
+
+            BinaryTreeFinal binaryTreeFinal = new BinaryTreeFinal();
+            binaryTreeFinal.BuildFromOrder(new string[] { "1", "2", "3", "4", "5"}, orderMatrix.ToArray());
+
             Console.WriteLine("End");
         }
     }
