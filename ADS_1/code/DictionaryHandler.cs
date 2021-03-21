@@ -128,6 +128,12 @@ namespace ADS_1.code
             return "";
         }
 
+        /// <summary>
+        /// Finds lexicographically nearest word from up. 
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="dic"></param>
+        /// <returns></returns>
         public static string FindNearestBottom(string word, SortedDictionary<string, int> dic)
         {
             foreach (var entry in dic.Reverse())
@@ -140,6 +146,14 @@ namespace ADS_1.code
             return "";
         }
 
+        /// <summary>
+        /// Returns relative frequency of gap, in which is word placed. 
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="sortedDic"></param>
+        /// <param name="allWordsDic"></param>
+        /// <param name="allFreq"></param>
+        /// <returns></returns>
         public static double GetRelativeFrequencyOfGapFromAll(string word, SortedDictionary<string, int> sortedDic, SortedDictionary<string, int> allWordsDic, int allFreq)
         {
             if(IsWordInDictionary(word, sortedDic))

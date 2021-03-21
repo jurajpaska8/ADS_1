@@ -43,9 +43,11 @@ namespace ADS_1
             binaryTree.Find("of");
             binaryTree.Find("and");
 
-            binaryTree.PrintGivenLevel(binaryTree.Root, 1);
-            binaryTree.PrintGivenLevel(binaryTree.Root, 2);
-            binaryTree.PrintGivenLevel(binaryTree.Root, 3);
+            for(int i = 1; i <= 10; i++)
+            {
+                Console.WriteLine("******** " + i + ". Level *********");
+                binaryTree.PrintGivenLevel(binaryTree.Root, i);
+            }
 
             int p1 = binaryTree.PocetPorovnani("thea");
             int p2 = binaryTree.PocetPorovnani("ab");

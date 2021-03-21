@@ -179,6 +179,13 @@ namespace ADS_1.code
             }
         }
 
+        /// <summary>
+        /// Returns list of indexes, how should be optimal tree created.
+        /// </summary>
+        /// <param name="rootMattrix"></param>
+        /// <param name="rootIndex"></param>
+        /// <param name="startIndex"></param>
+        /// <returns></returns>
         public List<int> GetOrderOfAddingKeys(int[,] rootMattrix, int rootIndex, int startIndex = 0)
         {
             List<int> order = new List<int> { };
