@@ -62,11 +62,18 @@ namespace ADS_1.code
 
         }
 
+        public OptimalBinaryTree(double[] p, double[] q, int n)
+        {
+            this.p = p;
+            this.q = q;
+            successfullSearchingTable = new double[n, n];
+        }
+
         public OptimalBinaryTree(string pPath, string qPath, SortedDictionary<string, int> keysDict, bool onlyP)
         {
             if (onlyP)
             {
-                // without first dummy freq - skip first 8 bytes
+                // without first dummy freq
                 byte[] pbytes = System.IO.File.ReadAllBytes(pPath);
                 p = new double[pbytes.Length / 8 - 1];
                 for (int i = 0; i < p.Length; i++)
@@ -98,60 +105,64 @@ namespace ADS_1.code
 
         public int[,] ComputeOptimalTreeCostSuccessful(out double cost)
         {
-            int n = keys.Length;
+            int n = p.Length;
             int[,] roots = new int[n + 1, n + 1];
+            double[,] e= new double[n + 1, n + 1];
+            double[,] w = new double[n + 1, n + 1];
 
             // For a single key, cost is equal to frequency of the key 
-            for (int i = 0; i < n; i++)
+            for (int i = 1; i <= n; i++)
             {
-                roots[i, i] = i;
-                successfullSearchingTable[i, i] = p[i];
+                roots[i, i - 1] = i;
+                e[i, i - 1] = q[i - 1];
+                w[i, i - 1] = q[i - 1];
 
             }
 
             // Now we need to consider chains of length 2, 3, ... . 
             // L is chain length. 
-            for (int L = 2; L <= n; L++)
+            for (int L = 1; L <= n; L++)
             {
 
                 // i is row number in cost[][] 
-                for (int i = 0; i <= n - L + 1; i++)
+                for (int i = 1; i < n - L + 1; i++)
                 {
 
                     // Get column number j from row number i and  
                     // chain length L 
                     int j = i + L - 1;
-                    successfullSearchingTable[i, j] = int.MaxValue;
+                    e[i, j] = int.MaxValue;
+                    w[i, j] = w[i, j - 1] + p[j] + q[j];
 
                     // Try making all keys in interval keys[i..j] as root 
                     for (int r = i; r <= j; r++)
                     {
 
                         // c = cost when keys[r] becomes root of this subtree 
-                        double c = ((r > i) ? successfullSearchingTable[i, r - 1] : 0)
-                                + ((r < j) ? successfullSearchingTable[r + 1, j] : 0) + sum(p, i, j);
-                        if (c < successfullSearchingTable[i, j])
+                        double c = e[i, r - 1] + e[r + 1, j] + w[i, j];
+                        if (c < e[i, j])
                         {
-                            successfullSearchingTable[i, j] = c;
+                            e[i, j] = c;
                             roots[i, j] = r;
                         }
                     }
                 }
             }
-            cost = successfullSearchingTable[0, n - 1];
+            cost = e[1, n - 1];
             return roots;
         }
 
         // A utility function to get sum of array elements  
         // freq[i] to freq[j] 
-        static double sum(double[] freq, int i, int j)
+        static double sum(double[] p, double[] q, int i, int j)
         {
             double s = 0;
             for (int k = i; k <= j; k++)
             {
-                if (k >= freq.Length)
+                if (k >= p.Length)
                     continue;
-                s += freq[k];
+                s += p[k];
+                s += q[k - 1];
             }
             return s;
         }
@@ -177,10 +188,10 @@ namespace ADS_1.code
             }
         }
 
-        public List<int> GetOrderOfAddingKeys(int[,] rootMattrix, int rootIndex)
+        public List<int> GetOrderOfAddingKeys(int[,] rootMattrix, int rootIndex, int startIndex = 0)
         {
             List<int> order = new List<int> { };
-            GetOrderOfAddingKeys(rootMattrix, 0, rootIndex, order);
+            GetOrderOfAddingKeys(rootMattrix, startIndex, rootIndex, order);
             return order;
         }
     }

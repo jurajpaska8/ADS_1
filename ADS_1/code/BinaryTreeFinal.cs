@@ -84,7 +84,24 @@ namespace ADS_1.code
             }
             for(int i = 0; i < keysOrder.Length; i++)
             {
-                Add(keys[keysOrder[i]], keysOrder[i]);
+                Add(keys[keysOrder[i] - 1], keysOrder[i] - 1);
+            }
+        }
+
+
+
+
+        /* Print nodes at a given level */
+        public void PrintGivenLevel(Node root, int level)
+        {
+            if (root == null)
+                return;
+            if (level == 1)
+                Console.WriteLine(root.Word);
+            else if (level > 1)
+            {
+                PrintGivenLevel(root.LeftNode, level - 1);
+                PrintGivenLevel(root.RightNode, level - 1);
             }
         }
     }
